@@ -2,7 +2,6 @@ import { useState } from 'react';
 import {
   GripVertical,
   Pencil,
-  Trash2,
   ChevronUp,
   ChevronDown,
 } from 'lucide-react';
@@ -11,19 +10,17 @@ import { cn } from '../../utils/cn';
 import { Toggle } from '../common/Toggle';
 
 /**
- * Mobile Actions Menu (Bottom Sheet style on expansion)
+ * Mobile Edit Button (shown on expansion)
  */
 interface MobileActionsProps {
   clientType: ClientType;
   onEdit: (clientType: ClientType) => void;
-  onDelete: (clientType: ClientType) => void;
   isExpanded: boolean;
 }
 
 function MobileActions({
   clientType,
   onEdit,
-  onDelete,
   isExpanded,
 }: MobileActionsProps) {
   if (!isExpanded) return null;
@@ -49,22 +46,6 @@ function MobileActions({
       >
         <Pencil size={16} />
         Edit
-      </button>
-
-      <button
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          onDelete(clientType);
-        }}
-        className={cn(
-          'flex items-center gap-2 px-3 py-2 text-sm rounded-md',
-          'bg-red-100 text-red-700 hover:bg-red-200 transition-colors',
-          'focus:outline-none focus:ring-2 focus:ring-red-500'
-        )}
-      >
-        <Trash2 size={16} />
-        Delete
       </button>
     </div>
   );
@@ -131,7 +112,6 @@ export interface ClientTypeCardProps {
   index: number;
   totalCount: number;
   onEdit: (clientType: ClientType) => void;
-  onDelete: (clientType: ClientType) => void;
   onToggleStatus: (id: string, isActive: boolean) => void;
   /** Whether edit order mode is active */
   isEditOrderMode: boolean;
@@ -159,7 +139,7 @@ export interface ClientTypeCardProps {
  * - Client count on second line
  * - Agent badge (if applicable)
  * - Status toggle directly accessible
- * - Tap to expand for edit/delete actions
+ * - Tap to expand for edit action
  * - In edit order mode: up/down arrows instead of drag handle
  */
 export function ClientTypeCard({
@@ -167,7 +147,6 @@ export function ClientTypeCard({
   index,
   totalCount,
   onEdit,
-  onDelete,
   onToggleStatus,
   isEditOrderMode,
   onMoveUp,
@@ -259,7 +238,6 @@ export function ClientTypeCard({
         <MobileActions
           clientType={clientType}
           onEdit={onEdit}
-          onDelete={onDelete}
           isExpanded={isExpanded && !isEditOrderMode}
         />
       </div>

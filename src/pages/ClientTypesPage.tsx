@@ -5,7 +5,6 @@ import { useClientTypes } from '../hooks/useClientTypes';
 import {
   ClientTypesTable,
   ClientTypeModal,
-  DeleteConfirmModal,
 } from '../components/client-types';
 import { Toast } from '../components/common/Toast';
 import { ToastType, ToastState, initialToastState } from '../types/toast';
@@ -27,7 +26,6 @@ export function ClientTypesPage() {
     fetchClientTypes,
     createClientType,
     updateClientType,
-    deleteClientType,
     updateSortOrder,
     toggleActiveStatus,
   } = useClientTypes();
@@ -37,7 +35,6 @@ export function ClientTypesPage() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('active');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [editingClientType, setEditingClientType] = useState<ClientType | null>(null);
-  const [deletingClientType, setDeletingClientType] = useState<ClientType | null>(null);
 
   // Toast state
   const [toast, setToast] = useState<ToastState>(initialToastState);
@@ -100,15 +97,6 @@ export function ClientTypesPage() {
     setIsCreateModalOpen(true);
   }, []);
 
-  // Delete handler - opens delete confirmation modal
-  const handleDelete = useCallback((clientType: ClientType) => {
-    setDeletingClientType(clientType);
-  }, []);
-
-  const handleCloseDeleteModal = useCallback(() => {
-    setDeletingClientType(null);
-  }, []);
-
   // Create/Edit submit handler
   const handleSubmit = useCallback(async (formData: ClientTypeFormData) => {
     try {
@@ -138,20 +126,6 @@ export function ClientTypesPage() {
       throw err; // Re-throw to keep modal open
     }
   }, [editingClientType, createClientType, updateClientType, showToast]);
-
-  // Delete confirm handler
-  const handleConfirmDelete = useCallback(async () => {
-    if (!deletingClientType) return;
-
-    try {
-      await deleteClientType(deletingClientType.id);
-      showToast(`"${deletingClientType.name}" has been deleted`, 'success');
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to delete client type';
-      showToast(message, 'error');
-      throw err; // Re-throw to keep modal open
-    }
-  }, [deletingClientType, deleteClientType, showToast]);
 
   // Toggle status handler
   const handleToggleStatus = useCallback(async (id: string, isActive: boolean) => {
@@ -405,7 +379,6 @@ export function ClientTypesPage() {
         <ClientTypesTable
           clientTypes={filteredClientTypes}
           onEdit={handleEdit}
-          onDelete={handleDelete}
           onToggleStatus={handleToggleStatus}
           onReorder={handleReorder}
         />
@@ -417,14 +390,6 @@ export function ClientTypesPage() {
         onClose={handleCloseCreateModal}
         onSubmit={handleSubmit}
         clientType={editingClientType ?? undefined}
-      />
-
-      {/* Delete Confirmation Modal */}
-      <DeleteConfirmModal
-        isOpen={Boolean(deletingClientType)}
-        onClose={handleCloseDeleteModal}
-        onConfirm={handleConfirmDelete}
-        clientType={deletingClientType}
       />
 
       {/* Toast Notifications */}

@@ -18,8 +18,6 @@ export interface ClientTypesTableProps {
   clientTypes: ClientType[];
   /** Callback when edit is requested for a client type */
   onEdit: (clientType: ClientType) => void;
-  /** Callback when delete is requested for a client type */
-  onDelete: (clientType: ClientType) => void;
   /** Callback when status toggle is changed */
   onToggleStatus: (id: string, isActive: boolean) => void;
   /** Callback when rows are reordered via drag-and-drop */
@@ -41,7 +39,6 @@ export interface ClientTypesTableProps {
 export function ClientTypesTable({
   clientTypes,
   onEdit,
-  onDelete,
   onToggleStatus,
   onReorder,
 }: ClientTypesTableProps) {
@@ -280,7 +277,6 @@ export function ClientTypesTable({
                           clientType={clientType}
                           index={index}
                           onEdit={onEdit}
-                          onDelete={onDelete}
                           onToggleStatus={onToggleStatus}
                         />
                       ))}
@@ -361,7 +357,6 @@ export function ClientTypesTable({
                 index={index}
                 totalCount={displayClientTypes.length}
                 onEdit={onEdit}
-                onDelete={onDelete}
                 onToggleStatus={onToggleStatus}
                 isEditOrderMode={isEditOrderMode}
                 onMoveUp={() => handleMoveUp(index)}
