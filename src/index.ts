@@ -6,6 +6,11 @@
  * required props (token, dbName, onTokenExpired, etc.).
  */
 
+// Import CSS for library build (required for dist/style.css generation)
+import './styles/variables-fallback.css';
+import './styles/custom-variables.css';
+import './index.css';
+
 export { default as App } from './App';
 export { default as ClientTypesApp } from './App';
 export { ClientTypesPage } from './pages/ClientTypesPage';

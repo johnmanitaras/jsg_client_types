@@ -11,8 +11,8 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
-      name: 'JetsetgoTemplate',
-      fileName: 'jetsetgo_template',
+      name: 'JsgClientTypes',
+      fileName: 'jsg_client_types',
     },
     rollupOptions: {
       external: ['react', 'react-dom', 'react-router-dom'],
