@@ -193,43 +193,39 @@ export function ClientTypesPage() {
         )}
       </div>
 
+
       {/* Search and Filter Bar */}
-      <div className="card mb-6">
-        <div className="card-body">
-          <div className="flex gap-3">
-            {/* Search Input */}
-            <div className="flex-1 relative">
-              <Search
-                size={20}
-                className="absolute left-3 top-1/2 -translate-y-1/2"
-                style={{ color: 'var(--color-text-secondary, #9ca3af)' }}
-              />
-              <input
-                type="text"
-                placeholder="Search client types..."
-                className="input pl-10 w-full"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                aria-label="Search client types"
-              />
-            </div>
-
-            {/* Status Filter Dropdown */}
-            <select
-              className="select"
-              style={{ width: '12rem' }}
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
-              aria-label="Filter by status"
-            >
-              <option value="all">All Status</option>
-              <option value="active">Active Only</option>
-              <option value="inactive">Inactive Only</option>
-            </select>
-          </div>
+      <div className="flex gap-3 mb-6">
+        {/* Search Input */}
+        <div className="flex-1 relative">
+          <Search
+            size={20}
+            className="absolute left-3 top-1/2 -translate-y-1/2"
+            style={{ color: 'var(--color-text-secondary, #9ca3af)' }}
+          />
+          <input
+            type="text"
+            placeholder="Search client types..."
+            className="input pl-10 w-full"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            aria-label="Search client types"
+          />
         </div>
-      </div>
 
+        {/* Status Filter Dropdown */}
+        <select
+          className="select"
+          style={{ width: '12rem' }}
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
+          aria-label="Filter by status"
+        >
+          <option value="all">All Status</option>
+          <option value="active">Active Only</option>
+          <option value="inactive">Inactive Only</option>
+        </select>
+      </div>
       {/* Main Content Area */}
       {isLoading ? (
         // Loading Skeleton
