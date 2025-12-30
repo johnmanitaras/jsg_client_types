@@ -11,6 +11,7 @@ import {
   validateClientTypeForm,
   hasFormErrors,
 } from '../../types/clientType';
+import { usePermissions } from '../../contexts/PermissionsContext';
 
 interface ClientTypeModalProps {
   /** Whether the modal is currently visible */
@@ -40,6 +41,9 @@ export function ClientTypeModal({
   onSubmit,
   clientType,
 }: ClientTypeModalProps) {
+  // Permissions
+  const { canEdit, inputProps } = usePermissions();
+
   const isEditMode = Boolean(clientType);
   const modalTitle = isEditMode ? 'Edit Client Type' : 'Add Client Type';
   const submitButtonText = isEditMode ? 'Save Changes' : 'Create Client Type';
@@ -269,6 +273,7 @@ export function ClientTypeModal({
                     maxLength={100}
                     aria-invalid={Boolean(errors.name)}
                     aria-describedby={errors.name ? 'name-error' : 'name-help'}
+                    {...inputProps}
                   />
                   {errors.name && (
                     <p
@@ -314,6 +319,7 @@ export function ClientTypeModal({
                     aria-describedby={
                       errors.description ? 'description-error' : 'description-help'
                     }
+                    {...inputProps}
                   />
                   {errors.description && (
                     <p
@@ -342,6 +348,7 @@ export function ClientTypeModal({
                     checked={formData.agent}
                     onChange={(e) => handleFieldChange('agent', e.target.checked)}
                     className="mt-1 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    {...inputProps}
                   />
                   <div>
                     <label
@@ -372,6 +379,7 @@ export function ClientTypeModal({
                       handleFieldChange('is_active', e.target.checked)
                     }
                     className="mt-1 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    {...inputProps}
                   />
                   <div>
                     <label
@@ -407,20 +415,22 @@ export function ClientTypeModal({
                 >
                   Cancel
                 </button>
-                <button
-                  type="submit"
-                  className="btn-primary"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 size={18} className="mr-2 animate-spin" />
-                      Saving...
-                    </>
-                  ) : (
-                    submitButtonText
-                  )}
-                </button>
+                {canEdit && (
+                  <button
+                    type="submit"
+                    className="btn-primary"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 size={18} className="mr-2 animate-spin" />
+                        Saving...
+                      </>
+                    ) : (
+                      submitButtonText
+                    )}
+                  </button>
+                )}
               </div>
             </form>
           </motion.div>

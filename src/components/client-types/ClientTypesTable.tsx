@@ -22,6 +22,8 @@ export interface ClientTypesTableProps {
   onToggleStatus: (id: string, isActive: boolean) => void;
   /** Callback when rows are reordered via drag-and-drop */
   onReorder: (updates: SortOrderUpdate[]) => void;
+  /** Whether the user can edit (from permissions) */
+  canEdit?: boolean;
 }
 
 /**
@@ -41,6 +43,7 @@ export function ClientTypesTable({
   onEdit,
   onToggleStatus,
   onReorder,
+  canEdit = true,
 }: ClientTypesTableProps) {
   // Mobile edit order mode state
   const [isEditOrderMode, setIsEditOrderMode] = useState(false);
@@ -278,6 +281,7 @@ export function ClientTypesTable({
                           index={index}
                           onEdit={onEdit}
                           onToggleStatus={onToggleStatus}
+                          canEdit={canEdit}
                         />
                       ))}
                       {provided.placeholder}
@@ -306,45 +310,47 @@ export function ClientTypesTable({
               {displayClientTypes.length} client type{displayClientTypes.length !== 1 ? 's' : ''}
             </p>
 
-            {isEditOrderMode ? (
-              <div className="flex items-center gap-2">
+            {canEdit && (
+              isEditOrderMode ? (
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleCancelEditOrder}
+                    className={cn(
+                      'px-3 py-1.5 text-sm rounded-md',
+                      'text-gray-600 hover:bg-gray-200 transition-colors',
+                      'focus:outline-none focus:ring-2 focus:ring-blue-500'
+                    )}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleSaveOrder}
+                    className={cn(
+                      'flex items-center gap-1 px-3 py-1.5 text-sm rounded-md',
+                      'bg-emerald-600 text-white hover:bg-emerald-700 transition-colors',
+                      'focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                    )}
+                  >
+                    <Check size={16} />
+                    Done
+                  </button>
+                </div>
+              ) : (
                 <button
                   type="button"
-                  onClick={handleCancelEditOrder}
+                  onClick={handleStartEditOrder}
                   className={cn(
-                    'px-3 py-1.5 text-sm rounded-md',
+                    'flex items-center gap-1 px-3 py-1.5 text-sm rounded-md',
                     'text-gray-600 hover:bg-gray-200 transition-colors',
                     'focus:outline-none focus:ring-2 focus:ring-blue-500'
                   )}
                 >
-                  Cancel
+                  <ArrowUpDown size={16} />
+                  Edit Order
                 </button>
-                <button
-                  type="button"
-                  onClick={handleSaveOrder}
-                  className={cn(
-                    'flex items-center gap-1 px-3 py-1.5 text-sm rounded-md',
-                    'bg-emerald-600 text-white hover:bg-emerald-700 transition-colors',
-                    'focus:outline-none focus:ring-2 focus:ring-emerald-500'
-                  )}
-                >
-                  <Check size={16} />
-                  Done
-                </button>
-              </div>
-            ) : (
-              <button
-                type="button"
-                onClick={handleStartEditOrder}
-                className={cn(
-                  'flex items-center gap-1 px-3 py-1.5 text-sm rounded-md',
-                  'text-gray-600 hover:bg-gray-200 transition-colors',
-                  'focus:outline-none focus:ring-2 focus:ring-blue-500'
-                )}
-              >
-                <ArrowUpDown size={16} />
-                Edit Order
-              </button>
+              )
             )}
           </div>
 
@@ -361,6 +367,7 @@ export function ClientTypesTable({
                 isEditOrderMode={isEditOrderMode}
                 onMoveUp={() => handleMoveUp(index)}
                 onMoveDown={() => handleMoveDown(index)}
+                canEdit={canEdit}
               />
             ))}
           </div>

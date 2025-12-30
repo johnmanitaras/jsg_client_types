@@ -9,6 +9,7 @@ import {
 import { Toast } from '../components/common/Toast';
 import { ToastType, ToastState, initialToastState } from '../types/toast';
 import { ClientType, ClientTypeFormData, StatusFilter, SortOrderUpdate } from '../types/clientType';
+import { usePermissions } from '../contexts/PermissionsContext';
 
 /**
  * ClientTypesPage - Main page for managing client type classifications
@@ -18,6 +19,9 @@ import { ClientType, ClientTypeFormData, StatusFilter, SortOrderUpdate } from '.
  * the JetSetGo platform for categorization, pricing rules, and agent features.
  */
 export function ClientTypesPage() {
+  // Permissions
+  const { canEdit } = usePermissions();
+
   // Data hook for client types
   const {
     clientTypes,
@@ -178,13 +182,15 @@ export function ClientTypesPage() {
             Manage customer classifications for your booking system
           </p>
         </div>
-        <button
-          className="btn-primary"
-          onClick={handleOpenCreateModal}
-        >
-          <Plus size={20} className="mr-2" />
-          Add Client Type
-        </button>
+        {canEdit && (
+          <button
+            className="btn-primary"
+            onClick={handleOpenCreateModal}
+          >
+            <Plus size={20} className="mr-2" />
+            Add Client Type
+          </button>
+        )}
       </div>
 
       {/* Search and Filter Bar */}
@@ -326,13 +332,15 @@ export function ClientTypesPage() {
                 Client types help you categorize customers and apply different pricing or policies.
                 Create your first client type to get started.
               </p>
-              <button
-                className="btn-primary"
-                onClick={handleOpenCreateModal}
-              >
-                <Plus size={20} className="mr-2" />
-                Add Client Type
-              </button>
+              {canEdit && (
+                <button
+                  className="btn-primary"
+                  onClick={handleOpenCreateModal}
+                >
+                  <Plus size={20} className="mr-2" />
+                  Add Client Type
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -381,6 +389,7 @@ export function ClientTypesPage() {
           onEdit={handleEdit}
           onToggleStatus={handleToggleStatus}
           onReorder={handleReorder}
+          canEdit={canEdit}
         />
       )}
 

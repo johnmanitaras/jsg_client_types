@@ -2,6 +2,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { AuthProvider } from './contexts/AuthContext';
+import { ReadOnlyToastProvider } from './contexts/ReadOnlyToastContext';
+import { PermissionsProvider, Permissions } from './contexts/PermissionsContext';
 import { Login } from './components/Login';
 import { ClientTypesPage } from './pages/ClientTypesPage';
 import { useAuth } from './hooks/useAuth';
@@ -27,6 +29,8 @@ interface AppProps {
   initialRoute?: string;
   onNavigate?: (route: string) => void;
   onNavigateToApp?: (path: string) => void;
+  // Permissions prop from wrapper
+  permissions?: Permissions;
 }
 
 // Standalone mode content with router
@@ -55,7 +59,7 @@ function EmbeddedContent() {
 
 // Note: initialRoute, onNavigate, onNavigateToApp are available for routing integration
 // See jsg_wrapper/docs/child-app-integration-standards.md Section 4 for implementation
-function App({ token, dbName, onTokenExpired, initialRoute: _initialRoute, onNavigate: _onNavigate, onNavigateToApp: _onNavigateToApp }: AppProps = {}) {
+function App({ token, dbName, onTokenExpired, initialRoute: _initialRoute, onNavigate: _onNavigate, onNavigateToApp: _onNavigateToApp, permissions }: AppProps = {}) {
   // Suppress unused variable warnings - these are available for routing implementation
   void _initialRoute; void _onNavigate; void _onNavigateToApp;
 
@@ -73,9 +77,13 @@ function App({ token, dbName, onTokenExpired, initialRoute: _initialRoute, onNav
   return (
     <div className="jsg-template">
       <QueryClientProvider client={queryClient}>
-        <AuthProvider token={token} dbName={dbName} onTokenExpired={onTokenExpired}>
-          {isEmbedded ? <EmbeddedContent /> : <StandaloneContent />}
-        </AuthProvider>
+        <ReadOnlyToastProvider>
+          <PermissionsProvider permissions={permissions}>
+            <AuthProvider token={token} dbName={dbName} onTokenExpired={onTokenExpired}>
+              {isEmbedded ? <EmbeddedContent /> : <StandaloneContent />}
+            </AuthProvider>
+          </PermissionsProvider>
+        </ReadOnlyToastProvider>
       </QueryClientProvider>
     </div>
   );

@@ -16,14 +16,16 @@ interface MobileActionsProps {
   clientType: ClientType;
   onEdit: (clientType: ClientType) => void;
   isExpanded: boolean;
+  canEdit: boolean;
 }
 
 function MobileActions({
   clientType,
   onEdit,
   isExpanded,
+  canEdit,
 }: MobileActionsProps) {
-  if (!isExpanded) return null;
+  if (!isExpanded || !canEdit) return null;
 
   return (
     <div
@@ -119,6 +121,8 @@ export interface ClientTypeCardProps {
   onMoveUp: () => void;
   /** Callback to move this item down in the list */
   onMoveDown: () => void;
+  /** Whether the user can edit (from permissions) */
+  canEdit?: boolean;
 }
 
 /**
@@ -151,6 +155,7 @@ export function ClientTypeCard({
   isEditOrderMode,
   onMoveUp,
   onMoveDown,
+  canEdit = true,
 }: ClientTypeCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const canMoveUp = index > 0;
@@ -217,6 +222,7 @@ export function ClientTypeCard({
             checked={clientType.is_active}
             onChange={(checked) => onToggleStatus(clientType.id, checked)}
             aria-label={`${clientType.is_active ? 'Deactivate' : 'Activate'} ${clientType.name}`}
+            disabled={!canEdit}
           />
         </div>
 
@@ -239,6 +245,7 @@ export function ClientTypeCard({
           clientType={clientType}
           onEdit={onEdit}
           isExpanded={isExpanded && !isEditOrderMode}
+          canEdit={canEdit}
         />
       </div>
     </div>
